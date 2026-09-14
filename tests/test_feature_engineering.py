@@ -113,5 +113,19 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertEqual(X_trans.isna().sum().sum(), 0)
 
 
+    def test_extreme_tenure_boundary_conditions(self):
+        """Test boundary tenure values (0 months, 72 months, >100 months)."""
+        df_boundary = self.sample_raw_data.copy()
+        df_boundary["tenure"] = [0, 6, 72, 120]
+        cleaned = clean_raw_data(df_boundary)
+        engineered = engineer_features(cleaned)
+
+        self.assertEqual(engineered.loc[0, "tenure_cohort"], "0-6m [New]")
+        self.assertEqual(engineered.loc[1, "tenure_cohort"], "0-6m [New]")
+        self.assertEqual(engineered.loc[2, "tenure_cohort"], "49+m [Veteran]")
+        self.assertEqual(engineered.loc[3, "tenure_cohort"], "49+m [Veteran]")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
