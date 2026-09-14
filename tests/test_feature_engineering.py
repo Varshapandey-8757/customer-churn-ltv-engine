@@ -126,6 +126,19 @@ class TestFeatureEngineering(unittest.TestCase):
         self.assertEqual(engineered.loc[3, "tenure_cohort"], "49+m [Veteran]")
 
 
+    def test_zero_charge_amounts(self):
+        """Test zero-charge edge case to ensure no zero division errors in charges_ratio."""
+        df_zero = self.sample_raw_data.copy()
+        df_zero["MonthlyCharges"] = [0.0, 0.0, 0.0, 0.0]
+        df_zero["TotalCharges"] = ["0.0", "0.0", "0.0", "0.0"]
+        cleaned = clean_raw_data(df_zero)
+        engineered = engineer_features(cleaned)
+
+        self.assertFalse(np.isinf(engineered["charges_ratio"]).any())
+        self.assertFalse(engineered["charges_ratio"].isna().any())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
 
