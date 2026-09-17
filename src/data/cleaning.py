@@ -22,5 +22,32 @@ def load_raw_data(file_path: str = PRIMARY_RAW_PATH) -> pd.DataFrame:
     print(f"[INFO] Loaded raw dataset with shape: {df.shape}")
     return df  
 
-if __name__ == "__main__":
-    df = load_raw_data()
+def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    df = df.drop_duplicates(subset=["customerID"])
+    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"].astype(str).str.strip(), errors="coerce")
+    missing_count = df["TotalCharges"].isnull().sum()
+    if missing_count > 0:
+        print(f"[INFO]Found{missing_count} missing values in TotalCharges. Imputing...")
+        df["TotalCharges"] = df["TotalCharges"].fillna(df["MonthlyCharges"] * df["tenure"])
+
+        if "Churn" in df.columns:
+            df["ChurnBinary"] = df["Churn"].apply(lambda x: 1 if str(x).strip().lower() == "yes" else 0)
+
+            print(f"[INFO] Data cleaning complete. Final dataset shape: {df. shape}")
+            return df
+
+def save_processed_data(df: pd.DataFrame, output_path: str = PROCESSED_DATA_PATH) -> None:
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            df.to_csv(output_path, index=False)
+            print(f"[SUCCESS] Processed dataset saved to: {output_path}")
+
+def run_cleaning_pipeline() -> pd.DataFrame:
+            raw_df = load_raw_data()
+            clean_df = clean_dataset(raw_df)
+            save_processed_data(clean_df)
+            return clean_df
+
+if __name__=="__main__":
+        run_cleaning_pipeline()         
