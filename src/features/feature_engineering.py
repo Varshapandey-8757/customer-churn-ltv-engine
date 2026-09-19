@@ -433,7 +433,7 @@ def prepare_model_dataset(
         - 'feature_names': List of final feature column names
         - 'engineered_full': Complete unscaled engineered dataset for EDA
     """
-    raw_path = Path(raw_csv_path)
+    raw_path = raw_path = Path("data/raw/telco_customer_churn.csv")
     if not raw_path.exists():
         raise FileNotFoundError(f"Raw data file not found: {raw_path}")
 
