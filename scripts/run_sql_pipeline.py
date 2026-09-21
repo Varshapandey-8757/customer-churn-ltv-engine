@@ -23,7 +23,7 @@ def clean_sql_for_sqlite(sql_content: str) -> str:
 
 def run_pipeline():
     project_root = Path(__file__).resolve().parent.parent
-    data_path = project_root / "data" / "raw" / "WA_Fn-UseC_-Telco-Customer-Churn.csv"
+    data_path = project_root / "data" / "raw" / "telco_customer_churn.csv"
     sql_dir = project_root / "sql"
 
     if not data_path.exists():
