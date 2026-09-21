@@ -10,7 +10,42 @@ CREATE SCHEMA IF NOT EXISTS analytics;
 
 
 -- =========================================================
+<<<<<<< HEAD
 -- 2. Cleaned staging table
+=======
+-- 2. Raw Telco Customer Churn data
+-- =========================================================
+-- Raw layer keeps all CSV values as TEXT.
+-- Type conversions happen in the cleaned staging layer.
+
+CREATE TABLE IF NOT EXISTS staging.telco_customer_churn_raw (
+    customer_id TEXT,
+    gender TEXT,
+    senior_citizen TEXT,
+    partner TEXT,
+    dependents TEXT,
+    tenure TEXT,
+    phone_service TEXT,
+    multiple_lines TEXT,
+    internet_service TEXT,
+    online_security TEXT,
+    online_backup TEXT,
+    device_protection TEXT,
+    tech_support TEXT,
+    streaming_tv TEXT,
+    streaming_movies TEXT,
+    contract TEXT,
+    paperless_billing TEXT,
+    payment_method TEXT,
+    monthly_charges TEXT,
+    total_charges TEXT,
+    churn TEXT
+);
+
+
+-- =========================================================
+-- 3. Cleaned staging table
+>>>>>>> b7d5340 (Add reproducible PostgreSQL raw and staging schema)
 -- =========================================================
 
 CREATE TABLE IF NOT EXISTS staging.telco_customer_churn (
@@ -38,6 +73,7 @@ CREATE TABLE IF NOT EXISTS staging.telco_customer_churn (
 );
 
 
+<<<<<<< HEAD
 -- =========================================================
 -- 3. Customer churn table
 -- =========================================================
@@ -65,3 +101,18 @@ CREATE TABLE IF NOT EXISTS customer_churn (
     total_charges NUMERIC(12,2),
     churn VARCHAR(10)
 );
+=======
+-- Primary key for cleaned staging table
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'telco_customer_churn_pk'
+    ) THEN
+        ALTER TABLE staging.telco_customer_churn
+        ADD CONSTRAINT telco_customer_churn_pk
+        PRIMARY KEY (customer_id);
+    END IF;
+END $$;
+>>>>>>> b7d5340 (Add reproducible PostgreSQL raw and staging schema)
