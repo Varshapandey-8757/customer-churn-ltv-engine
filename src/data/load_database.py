@@ -45,13 +45,42 @@ def load_database():
     # 3. Clean column names
     # ---------------------------------------------------------
 
-    df.columns = [
-        column.strip()
-        .lower()
-        .replace(" ", "_")
-        for column in df.columns
-    ]
+        # ---------------------------------------------------------
+    # 3. Clean column names
+    # ---------------------------------------------------------
 
+        # ---------------------------------------------------------
+    # 3. Rename CSV columns to PostgreSQL column names
+    # ---------------------------------------------------------
+
+    df = df.rename(
+        columns={
+            "customerID": "customer_id",
+            "gender": "gender",
+            "SeniorCitizen": "senior_citizen",
+            "Partner": "partner",
+            "Dependents": "dependents",
+            "tenure": "tenure",
+            "PhoneService": "phone_service",
+            "MultipleLines": "multiple_lines",
+            "InternetService": "internet_service",
+            "OnlineSecurity": "online_security",
+            "OnlineBackup": "online_backup",
+            "DeviceProtection": "device_protection",
+            "TechSupport": "tech_support",
+            "StreamingTV": "streaming_tv",
+            "StreamingMovies": "streaming_movies",
+            "Contract": "contract",
+            "PaperlessBilling": "paperless_billing",
+            "PaymentMethod": "payment_method",
+            "MonthlyCharges": "monthly_charges",
+            "TotalCharges": "total_charges",
+            "Churn": "churn"
+        }
+    )
+
+    print("\nColumns renamed for PostgreSQL:")
+    print(list(df.columns))
     # ---------------------------------------------------------
     # 4. Clean blank values
     # ---------------------------------------------------------
