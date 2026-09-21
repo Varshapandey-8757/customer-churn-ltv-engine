@@ -18,7 +18,7 @@ from src.features.feature_engineering import prepare_model_dataset
 
 
 def main():
-    raw_path = PROJECT_ROOT / "data" / "raw" / "WA_Fn-UseC_-Telco-Customer-Churn.csv"
+    raw_path = PROJECT_ROOT / "data" / "raw" / "telco_customer_churn.csv"
     output_dir = PROJECT_ROOT / "data" / "processed"
 
     print("=" * 80)
