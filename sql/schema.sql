@@ -53,3 +53,4 @@ CREATE TABLE IF NOT EXISTS customer_churn (
     total_charges NUMERIC(12,2),
     churn VARCHAR(10)
 );
+
