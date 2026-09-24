@@ -515,7 +515,7 @@ def prepare_model_dataset(
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Run Feature Engineering Pipeline")
-    parser.add_argument("--data-path", type=str, default="data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv")
+    parser.add_argument("--data-path", type=str, default="data/raw/telco_customer_churn.csv")
     parser.add_argument("--output-dir", type=str, default="data/processed")
     args = parser.parse_args()
 
