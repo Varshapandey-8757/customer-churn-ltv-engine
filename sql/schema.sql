@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  -- Customer Churn LTV Engine
+=======
+-- Customer Churn LTV Engine
+>>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- PostgreSQL Database Schema
 
 -- =========================================================
@@ -11,8 +15,11 @@ CREATE SCHEMA IF NOT EXISTS analytics;
 
 -- =========================================================
 <<<<<<< HEAD
+<<<<<<< HEAD
 -- 2. Cleaned staging table
 =======
+=======
+>>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- 2. Raw Telco Customer Churn data
 -- =========================================================
 -- Raw layer keeps all CSV values as TEXT.
@@ -45,7 +52,10 @@ CREATE TABLE IF NOT EXISTS staging.telco_customer_churn_raw (
 
 -- =========================================================
 -- 3. Cleaned staging table
+<<<<<<< HEAD
 >>>>>>> b7d5340 (Add reproducible PostgreSQL raw and staging schema)
+=======
+>>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- =========================================================
 
 CREATE TABLE IF NOT EXISTS staging.telco_customer_churn (
@@ -74,8 +84,13 @@ CREATE TABLE IF NOT EXISTS staging.telco_customer_churn (
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 -- =========================================================
 -- 3. Customer churn table
+=======
+-- =========================================================
+-- 4. Customer churn table
+>>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- =========================================================
 
 CREATE TABLE IF NOT EXISTS customer_churn (
@@ -101,7 +116,12 @@ CREATE TABLE IF NOT EXISTS customer_churn (
     total_charges NUMERIC(12,2),
     churn VARCHAR(10)
 );
+<<<<<<< HEAD
 =======
+=======
+
+
+>>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- Primary key for cleaned staging table
 DO $$
 BEGIN
@@ -115,4 +135,7 @@ BEGIN
         PRIMARY KEY (customer_id);
     END IF;
 END $$;
+<<<<<<< HEAD
 >>>>>>> b7d5340 (Add reproducible PostgreSQL raw and staging schema)
+=======
+>>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
