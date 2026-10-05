@@ -2,12 +2,14 @@
 
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from api.schemas import ChurnPrediction, CustomerInput, ExplanationResponse
 from api.services import prediction_service
 
 router = APIRouter(prefix="/churn", tags=["churn"])
+
+MAX_BATCH_SIZE = 1000
 
 
 @router.post("/predict", response_model=ChurnPrediction)
@@ -17,6 +19,15 @@ def predict_one(customer: CustomerInput):
 
 @router.post("/predict/batch", response_model=List[ChurnPrediction])
 def predict_batch(customers: List[CustomerInput]):
+    if not customers:
+        raise HTTPException(
+            status_code=422, detail="Send at least one customer."
+        )
+    if len(customers) > MAX_BATCH_SIZE:
+        raise HTTPException(
+            status_code=422,
+            detail=f"A batch can contain at most {MAX_BATCH_SIZE} customers.",
+        )
     return prediction_service.predict_churn([c.model_dump() for c in customers])
 
 
