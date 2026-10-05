@@ -7,7 +7,7 @@
 
 ## 1. Executive Summary
 
-Traditional churn models only predict the likelihood that a customer leaves ($P(\text{churn})$). However, customer success and marketing teams need an actionable, value-weighted retention strategy. 
+Traditional churn models only predict the likelihood that a customer leaves ($P(\text{churn})$). However, customer success and marketing teams need an actionable, value-weighted retention strategy.
 
 Our segmentation engine implements a **2x2 Value-to-Risk Matrix** combining Monetary Worth (`MonthlyCharges` & `TotalCharges`) with Churn Exposure (`Contract`, `Tenure`, `PaymentMethod`, and `Support Attach`).
 
@@ -28,31 +28,42 @@ Our segmentation engine implements a **2x2 Value-to-Risk Matrix** combining Mone
 
 ## 2. Segment Deep Dive & Action Playbooks
 
+The four segments are assigned in this order (first match wins), and together cover all 7,043 accounts.
+
 ### Segment 1: High Value - Urgent Retention
+
 - **Criteria**: `MonthlyCharges >= $80.0` AND (`is_month_to_month == 1` OR `has_fiber_no_techsupport_risk == 1`).
-- **Volume**: 1,350 accounts (1,051 active).
-- **Churn Rate**: **54.81%** (highest revenue loss vector).
-- **MRR at Stake**: **$99,350.25 / month**.
+- **Volume**: 1,885 accounts (1,051 active).
+- **Churn Rate**: **44.24%** (54.81% for the 1,350 accounts that also have a High Risk profile).
+- **ARPU**: $94.00 / month. **Avg Historical LTV**: $3,133.00.
+- **MRR at Stake**: **$99,350.25 / month** (active accounts only).
 - **Action Playbook**:
-  - Assign to VIP customer success specialists within 24 hours.
-  - Offer a discounted 1-year contract lock-in with complimentary Tech Support and security add-ons.
+    - Assign to VIP customer success specialists within 24 hours.
+    - Offer a discounted 1-year contract lock-in with complimentary Tech Support and security add-ons.
 
 ### Segment 2: High Value - Loyal VIP
-- **Criteria**: `MonthlyCharges >= $80.0` with 1-2 Year contract and auto-pay enabled.
-- **Volume**: 762 accounts.
-- **Churn Rate**: **9.45%**.
-- **Avg Historical LTV**: **$6,126.17**.
+
+- **Criteria**: `MonthlyCharges >= $80.0` and not in Segment 1 (so: not month-to-month and no Fiber-without-Tech-Support gap).
+- **Volume**: 792 accounts (716 active).
+- **Churn Rate**: **9.60%**.
+- **Avg Historical LTV**: **$5,980.27**. **Active MRR**: $70,261.25.
 - **Action Playbook**:
-  - Priority loyalty tier, early access to new streaming features, zero-rate device upgrades.
+    - Priority loyalty tier, early access to new streaming features, zero-rate device upgrades.
 
 ### Segment 3: Low Value - Price Sensitive
+
 - **Criteria**: `MonthlyCharges < $40.0` on Month-to-Month contracts.
-- **Volume**: 1,180 accounts.
-- **Churn Rate**: **38.20%**.
+- **Volume**: 761 accounts (565 active).
+- **Churn Rate**: **25.76%**.
+- **ARPU**: $23.57 / month.
 - **Action Playbook**:
-  - Automated self-service nudges, bundle promotions with low incremental cost.
+    - Automated self-service nudges, bundle promotions with low incremental cost.
 
 ### Segment 4: Core Mid-Market
-- **Criteria**: Standard single/double play subscribers ($40 - $80/mo).
+
+- **Criteria**: Everything else: $40 - $80 per month on any contract, plus accounts under $40 on 1-2 year contracts.
+- **Volume**: 3,605 accounts (2,842 active).
+- **Churn Rate**: **21.17%**.
+- **ARPU**: $50.73 / month. **Active MRR**: $134,383.50.
 - **Action Playbook**:
-  - Service expansion campaigns: promote Online Security & Tech Support to increase stickiness.
+    - Service expansion campaigns: promote Online Security & Tech Support to increase stickiness.
