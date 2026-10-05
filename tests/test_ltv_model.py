@@ -1,55 +1,36 @@
+"""LTV model tests, including a target-leakage guard."""
+
 import joblib
-import pandas as pd
 import numpy as np
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import pytest
+from sklearn.metrics import mean_absolute_error, r2_score
 
-
-# --------------------------------------------------
-# 1. Load test data
-# --------------------------------------------------
-
-X_test = pd.read_csv("data/processed/X_test.csv")
-y_test = pd.read_csv("data/processed/y_ltv_test.csv").squeeze()
-
-print("X_test shape:", X_test.shape)
-print("y_test shape:", y_test.shape)
-
-
-# --------------------------------------------------
-# 2. Load trained LTV model
-# --------------------------------------------------
-
-model = joblib.load("models/ltv/ltv_model.pkl")
-
-print("LTV model loaded successfully.")
-print("Model type:", type(model))
-
-
-# --------------------------------------------------
-# 3. Generate predictions
-# --------------------------------------------------
-
-y_pred = model.predict(X_test)
-
-print("Predictions generated successfully.")
-print("First 10 predictions:", y_pred[:10])
-
-
-# --------------------------------------------------
-# 4. Evaluate model
-# --------------------------------------------------
-
-mae = mean_absolute_error(y_test, y_pred)
-
-rmse = np.sqrt(
-    mean_squared_error(y_test, y_pred)
+from src.models.utils import (
+    LEAKY_LTV_COLUMNS, LTV_MODEL_PATH, drop_leaky_ltv_columns, load_split,
 )
 
-r2 = r2_score(y_test, y_pred)
+pytestmark = pytest.mark.skipif(
+    not LTV_MODEL_PATH.exists(), reason="Run `make train` first"
+)
 
 
-print("\nLTV Model Evaluation")
-print("--------------------")
-print("MAE :", mae)
-print("RMSE:", rmse)
-print("R2  :", r2)
+@pytest.fixture(scope="module")
+def bundle():
+    return joblib.load(LTV_MODEL_PATH)
+
+
+def test_model_does_not_use_leaky_columns(bundle):
+    leaked = [c for c in LEAKY_LTV_COLUMNS if c in bundle["feature_names"]]
+    assert leaked == [], f"Target leakage: {leaked}"
+
+
+def test_predictions_are_sane(bundle):
+    _, X_test, _, _, _, y_test = load_split()
+    X_test = drop_leaky_ltv_columns(X_test)[bundle["feature_names"]]
+    pred = bundle["model"].predict(X_test)
+
+    assert len(pred) == len(y_test)
+    assert not np.isnan(pred).any()
+    assert (pred >= 0).all()
+    assert r2_score(y_test, pred) > 0.5
+    assert mean_absolute_error(y_test, pred) < y_test.mean()

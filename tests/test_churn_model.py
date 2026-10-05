@@ -1,99 +1,38 @@
+"""Churn model tests on the held-out engineered test set."""
+
 import joblib
-import pandas as pd
-from sklearn.metrics import accuracy_score, classification_report
+import pytest
+from sklearn.metrics import recall_score, roc_auc_score
 
+from src.models.utils import CHURN_MODEL_PATH, load_split
 
-# --------------------------------------------------
-# 1. Load RAW test data
-# --------------------------------------------------
-
-df = pd.read_csv(
-    "data/raw/telco_customer_churn.csv"
+pytestmark = pytest.mark.skipif(
+    not CHURN_MODEL_PATH.exists(), reason="Run `make train` first"
 )
 
-df.columns = df.columns.str.strip()
 
-df["TotalCharges"] = pd.to_numeric(
-    df["TotalCharges"],
-    errors="coerce"
-)
-
-df["Churn"] = df["Churn"].map({
-    "No": 0,
-    "Yes": 1
-})
-
-X = df.drop(
-    columns=["Churn", "customerID"],
-    errors="ignore"
-)
-
-y = df["Churn"]
+@pytest.fixture(scope="module")
+def bundle():
+    return joblib.load(CHURN_MODEL_PATH)
 
 
-# --------------------------------------------------
-# 2. Recreate the SAME test split used during training
-# --------------------------------------------------
-
-from sklearn.model_selection import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.20,
-    random_state=42,
-    stratify=y
-)
-
-print("X_test shape:", X_test.shape)
-print("y_test shape:", y_test.shape)
+def test_bundle_has_required_keys(bundle):
+    for key in ("model", "feature_names", "threshold"):
+        assert key in bundle
 
 
-# --------------------------------------------------
-# 3. Load trained churn model
-# --------------------------------------------------
+def test_probabilities_are_valid(bundle):
+    _, X_test, _, y_test, _, _ = load_split()
+    proba = bundle["model"].predict_proba(X_test[bundle["feature_names"]])[:, 1]
 
-model = joblib.load(
-    "models/churn_model.pkl"
-)
-
-print("Churn model loaded successfully.")
-print("Model type:", type(model))
+    assert len(proba) == len(y_test)
+    assert ((proba >= 0) & (proba <= 1)).all()
 
 
-# --------------------------------------------------
-# 4. Generate predictions
-# --------------------------------------------------
+def test_model_quality(bundle):
+    _, X_test, _, y_test, _, _ = load_split()
+    proba = bundle["model"].predict_proba(X_test[bundle["feature_names"]])[:, 1]
+    pred = (proba >= bundle["threshold"]).astype(int)
 
-y_pred = model.predict(X_test)
-
-print("Predictions generated successfully.")
-print("First 10 predictions:", y_pred[:10])
-
-
-# --------------------------------------------------
-# 5. Evaluate model
-# --------------------------------------------------
-
-accuracy = accuracy_score(
-    y_test,
-    y_pred
-)
-
-print("\nChurn Model Evaluation")
-print("----------------------")
-print("Accuracy:", accuracy)
-
-print("\nClassification Report")
-print("---------------------")
-
-print(
-    classification_report(
-        y_test,
-        y_pred,
-        target_names=["No Churn", "Churn"],
-        zero_division=0
-    )
-)
-
-print("Churn model test completed successfully.")
+    assert roc_auc_score(y_test, proba) > 0.80
+    assert recall_score(y_test, pred) > 0.65

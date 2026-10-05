@@ -4,7 +4,7 @@ Environment & Dependency Verification Script
 Owner: Abhishek
 Project: Customer Churn Prediction & LTV Engine
 Purpose:
-Verifies that all required packages, versions, and system dependencies 
+Verifies that all required packages, versions, and system dependencies
 are present for running the SQL and feature engineering pipeline.
 """
 
@@ -15,9 +15,17 @@ REQUIRED_PACKAGES = {
     "pandas": "2.0.0",
     "numpy": "1.24.0",
     "sklearn": "1.3.0",
+    "xgboost": "2.0.0",
+    "shap": "0.45.0",
+    "fastapi": "0.110.0",
+    "uvicorn": "0.29.0",
+    "pydantic": "2.5.0",
+    "sqlalchemy": "2.0.0",
+    "dotenv": None,
     "matplotlib": "3.7.0",
     "seaborn": "0.12.0",
     "joblib": "1.3.0",
+    "pytest": "8.0.0",
     "sqlite3": None,
 }
 
