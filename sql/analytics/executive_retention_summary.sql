@@ -18,10 +18,12 @@ SELECT
     SUM(is_churned) AS churned_customers,
     ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS overall_churn_rate_pct,
 
-    -- Financial Totals (MRR & ARR equivalent)
-    ROUND(SUM(monthly_charges), 2) AS total_mrr,
-    ROUND(SUM(monthly_charges) * 12.0, 2) AS estimated_arr,
+    -- Financial Totals (MRR & ARR are based on ACTIVE customers only)
+    ROUND(SUM(CASE WHEN is_churned = 0 THEN monthly_charges ELSE 0 END), 2) AS active_mrr,
+    ROUND(SUM(CASE WHEN is_churned = 0 THEN monthly_charges ELSE 0 END) * 12.0, 2) AS estimated_arr,
+    ROUND(AVG(CASE WHEN is_churned = 0 THEN monthly_charges END), 2) AS active_arpu,
     ROUND(AVG(monthly_charges), 2) AS global_arpu,
+    ROUND(SUM(monthly_charges), 2) AS billed_monthly_all_accounts,
 
     -- Cumulative Realized Revenue (Historical LTV)
     ROUND(SUM(total_charges), 2) AS total_realized_revenue,
