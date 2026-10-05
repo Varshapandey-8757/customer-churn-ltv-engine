@@ -23,5 +23,11 @@ Thumbs.db
 # Processed data
 data/processed/
 
-# ML models
+# ML models: ignore stray pickles, keep the trained models
 *.pkl
+!models/churn_model.pkl
+!models/ltv/ltv_model.pkl
+
+# Local dump / large files
+project_review.txt
+*.zip
