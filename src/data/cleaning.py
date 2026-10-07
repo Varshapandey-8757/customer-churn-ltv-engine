@@ -1,53 +1,68 @@
 """
-Data Cleaning & Preprocessing Module
-Owner: Ravi (Data Cleaning & EDA Engineer)
+Telco Churn Data Cleaning Pipeline
+Ravi - Data Analytics
 """
 
 import os
 import pandas as pd
 import numpy as np
 
-PRIMARY_RAW_PATH = os.path.join("data", "raw", "WA_Fn-UseC_-Telco-Customer-Churn.csv")
-ALT_RAW_PATH = os.path.join("data", "raw", "telco_customer_churn.csv")
-PROCESSED_DATA_PATH = os.path.join("data", "processed", "customer_features.csv")
+# File paths
+RAW_PATH_1 = os.path.join("data", "raw", "WA_Fn-UseC_-Telco-Customer-Churn.csv")
+RAW_PATH_2 = os.path.join("data", "raw", "telco_customer_churn.csv")
+OUTPUT_PATH = os.path.join("data", "processed", "customer_features.csv")
 
-def load_raw_data(file_path: str = PRIMARY_RAW_PATH) -> pd.DataFrame:
-    if not os.path.exists(file_path):
-        if os.path.exists(ALT_RAW_PATH):
-            file_path = ALT_RAW_PATH
-        else:
-            raise FileNotFoundError(f"Raw data file not found at: {file_path}")
-    
-    df = pd.read_csv(file_path)
-    print(f"[INFO] Loaded raw dataset with shape: {df.shape}")
-    return df  
 
-def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
+def load_raw_data(path=RAW_PATH_1):
+    # Check if primary or fallback file exists
+    if os.path.exists(path):
+        target_path = path
+    elif os.path.exists(RAW_PATH_2):
+        target_path = RAW_PATH_2
+    else:
+        raise FileNotFoundError(f"Could not find raw dataset at {path} or {RAW_PATH_2}")
 
-    df = df.drop_duplicates(subset=["customerID"])
-    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"].astype(str).str.strip(), errors="coerce")
-    missing_count = df["TotalCharges"].isnull().sum()
-    if missing_count > 0:
-        print(f"[INFO]Found{missing_count} missing values in TotalCharges. Imputing...")
-        df["TotalCharges"] = df["TotalCharges"].fillna(df["MonthlyCharges"] * df["tenure"])
+    df = pd.read_csv(target_path)
+    print(f"[INFO] Loaded raw dataset: {df.shape[0]} rows, {df.shape[1]} columns")
+    return df
 
-        if "Churn" in df.columns:
-            df["ChurnBinary"] = df["Churn"].apply(lambda x: 1 if str(x).strip().lower() == "yes" else 0)
 
-            print(f"[INFO] Data cleaning complete. Final dataset shape: {df. shape}")
-            return df
+def clean_dataset(df):
+    data = df.copy()
 
-def save_processed_data(df: pd.DataFrame, output_path: str = PROCESSED_DATA_PATH) -> None:
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
-            df.to_csv(output_path, index=False)
-            print(f"[SUCCESS] Processed dataset saved to: {output_path}")
+    # 1. Remove duplicate customer entries if any
+    init_count = len(data)
+    data = data.drop_duplicates(subset=["customerID"])
+    if len(data) < init_count:
+        print(f"[INFO] Removed {init_count - len(data)} duplicate records")
 
-def run_cleaning_pipeline() -> pd.DataFrame:
-            raw_df = load_raw_data()
-            clean_df = clean_dataset(raw_df)
-            save_processed_data(clean_df)
-            return clean_df
+    # 2. Fix TotalCharges: raw data has blank spaces " " for tenure=0 customers
+    data["TotalCharges"] = pd.to_numeric(data["TotalCharges"].astype(str).str.strip(), errors="coerce")
+    null_totals = data["TotalCharges"].isnull().sum()
+    if null_totals > 0:
+        print(f"[INFO] Found {null_totals} blank TotalCharges (tenure=0). Filling with MonthlyCharges * tenure...")
+        data["TotalCharges"] = data["TotalCharges"].fillna(data["MonthlyCharges"] * data["tenure"])
 
-if __name__=="__main__":
-        run_cleaning_pipeline()         
+    # 3. Create binary churn target column for modeling (Yes -> 1, No -> 0)
+    if "Churn" in data.columns:
+        data["ChurnBinary"] = data["Churn"].astype(str).str.strip().str.lower().map({"yes": 1, "no": 0}).fillna(0).astype(int)
+
+    print(f"[INFO] Cleaned dataset ready: {data.shape[0]} rows, {data.shape[1]} columns")
+    return data
+
+
+def save_processed_data(df, output_path=OUTPUT_PATH):
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    df.to_csv(output_path, index=False)
+    print(f"[SUCCESS] Cleaned data saved to: {output_path}")
+
+
+def run_cleaning_pipeline():
+    raw_df = load_raw_data()
+    cleaned_df = clean_dataset(raw_df)
+    save_processed_data(cleaned_df)
+    return cleaned_df
+
+
+if __name__ == "__main__":
+    run_cleaning_pipeline()
