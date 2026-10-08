@@ -50,6 +50,12 @@ def clean_dataset(df):
     print(f"[INFO] Cleaned dataset ready: {data.shape[0]} rows, {data.shape[1]} columns")
     return data
 
+def validate_cleaned_data(df):
+    """Prints a quick sanity check of the cleaned dataset."""
+    nulls = df.isnull().sum().sum()
+    churn_rate = (df['ChurnBinary'].mean() * 100) if 'ChurnBinary' in df.columns else 0
+    print(f"[VERIFY] Total records: {len(df)} | Remaining NaNs: {nulls} | Baseline Churn: {churn_rate:.2f}%")
+
 
 def save_processed_data(df, output_path=OUTPUT_PATH):
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -60,6 +66,7 @@ def save_processed_data(df, output_path=OUTPUT_PATH):
 def run_cleaning_pipeline():
     raw_df = load_raw_data()
     cleaned_df = clean_dataset(raw_df)
+    validate_cleaned_data(cleaned_df)
     save_processed_data(cleaned_df)
     return cleaned_df
 
