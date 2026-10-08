@@ -34,3 +34,4 @@ def test_predictions_are_sane(bundle):
     assert (pred >= 0).all()
     assert r2_score(y_test, pred) > 0.5
     assert mean_absolute_error(y_test, pred) < y_test.mean()
+    print("varsha")
