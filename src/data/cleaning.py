@@ -50,6 +50,10 @@ def clean_dataset(df):
     print(f"[INFO] Cleaned dataset ready: {data.shape[0]} rows, {data.shape[1]} columns")
     return data
 
+    # 4. Enforce clean integer type for SeniorCitizen flag
+    if "SeniorCitizen" in data.columns:
+        data["SeniorCitizen"] = data["SeniorCitizen"].fillna(0).astype(int)
+
 def validate_cleaned_data(df):
     """Prints a quick sanity check of the cleaned dataset."""
     nulls = df.isnull().sum().sum()
