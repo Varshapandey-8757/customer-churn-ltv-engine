@@ -30,6 +30,11 @@ def load_raw_data(path=RAW_PATH_1):
 def clean_dataset(df):
     data = df.copy()
 
+     # Strip any accidental whitespace from all text/category columns
+    text_columns = data.select_dtypes(include=["object"]).columns
+    for col in text_columns:
+        data[col] = data[col].astype(str).str.strip()
+
     # 1. Remove duplicate customer entries if any
     init_count = len(data)
     data = data.drop_duplicates(subset=["customerID"])
