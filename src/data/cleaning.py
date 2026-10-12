@@ -79,6 +79,15 @@ def run_cleaning_pipeline():
     save_processed_data(cleaned_df)
     return cleaned_df
 
-
 if __name__ == "__main__":
-    run_cleaning_pipeline()
+    import sys
+    # Allow passing custom input file path from command line
+    if len(sys.argv) > 1:
+        custom_input = sys.argv[1]
+        print(f"[INFO] Using custom input path: {custom_input}")
+        raw = load_raw_data(custom_input)
+        clean = clean_dataset(raw)
+        save_processed_data(clean)
+    else:
+        run_cleaning_pipeline()
+
