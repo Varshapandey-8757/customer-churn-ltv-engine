@@ -17,7 +17,7 @@ SELECT
     payment_method,
     COUNT(customer_id) AS total_customers,
     SUM(is_churned) AS churned_customers,
-    ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
+    ROUND(CAST(SUM(is_churned) AS NUMERIC) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
     ROUND(SUM(monthly_charges), 2) AS total_mrr,
     ROUND(SUM(CASE WHEN is_churned = 1 THEN monthly_charges ELSE 0 END), 2) AS lost_mrr,
     ROUND(AVG(monthly_charges), 2) AS avg_monthly_charge,

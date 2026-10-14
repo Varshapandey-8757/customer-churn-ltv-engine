@@ -1,8 +1,4 @@
-<<<<<<< HEAD
- -- Customer Churn LTV Engine
-=======
 -- Customer Churn LTV Engine
->>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- PostgreSQL Database Schema
 
 -- =========================================================
@@ -14,12 +10,6 @@ CREATE SCHEMA IF NOT EXISTS analytics;
 
 
 -- =========================================================
-<<<<<<< HEAD
-<<<<<<< HEAD
--- 2. Cleaned staging table
-=======
-=======
->>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- 2. Raw Telco Customer Churn data
 -- =========================================================
 -- Raw layer keeps all CSV values as TEXT.
@@ -52,14 +42,10 @@ CREATE TABLE IF NOT EXISTS staging.telco_customer_churn_raw (
 
 -- =========================================================
 -- 3. Cleaned staging table
-<<<<<<< HEAD
->>>>>>> b7d5340 (Add reproducible PostgreSQL raw and staging schema)
-=======
->>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- =========================================================
 
 CREATE TABLE IF NOT EXISTS staging.telco_customer_churn (
-    customer_id VARCHAR(20) PRIMARY KEY,
+    customer_id VARCHAR(20),
     gender VARCHAR(20),
     senior_citizen INTEGER,
     partner VARCHAR(10),
@@ -78,50 +64,20 @@ CREATE TABLE IF NOT EXISTS staging.telco_customer_churn (
     paperless_billing VARCHAR(10),
     payment_method VARCHAR(50),
     monthly_charges NUMERIC(10,2),
-    total_charges NUMERIC(12,2),
+    total_charges NUMERIC(10,2),
     churn VARCHAR(10)
 );
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 -- =========================================================
--- 3. Customer churn table
-=======
--- =========================================================
--- 4. Customer churn table
->>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
+-- 4. Analytics table (used by load_database.py and analytics SQL)
 -- =========================================================
 
-CREATE TABLE IF NOT EXISTS customer_churn (
-    customer_id VARCHAR(20) PRIMARY KEY,
-    gender VARCHAR(20),
-    senior_citizen INTEGER,
-    partner VARCHAR(10),
-    dependents VARCHAR(10),
-    tenure INTEGER,
-    phone_service VARCHAR(30),
-    multiple_lines VARCHAR(50),
-    internet_service VARCHAR(30),
-    online_security VARCHAR(30),
-    online_backup VARCHAR(30),
-    device_protection VARCHAR(30),
-    tech_support VARCHAR(30),
-    streaming_tv VARCHAR(30),
-    streaming_movies VARCHAR(30),
-    contract VARCHAR(50),
-    paperless_billing VARCHAR(10),
-    payment_method VARCHAR(50),
-    monthly_charges NUMERIC(10,2),
-    total_charges NUMERIC(12,2),
-    churn VARCHAR(10)
+CREATE TABLE IF NOT EXISTS analytics.customer_churn (
+    LIKE staging.telco_customer_churn INCLUDING ALL
 );
-<<<<<<< HEAD
-=======
-=======
 
 
->>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02
 -- Primary key for cleaned staging table
 DO $$
 BEGIN
@@ -135,7 +91,3 @@ BEGIN
         PRIMARY KEY (customer_id);
     END IF;
 END $$;
-<<<<<<< HEAD
->>>>>>> b7d5340 (Add reproducible PostgreSQL raw and staging schema)
-=======
->>>>>>> f1cdee41a54b32a1cb945a27168113b29c0b1a02

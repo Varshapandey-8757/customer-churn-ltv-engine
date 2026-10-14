@@ -29,7 +29,10 @@ from pathlib import Path
 
 from sqlalchemy import text
 
-from database import engine
+try:
+    from src.data.database import engine
+except ModuleNotFoundError:
+    from database import engine
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

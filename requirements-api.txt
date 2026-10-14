@@ -1,12 +1,11 @@
 # Minimal dependencies needed to SERVE the models (used by Dockerfile).
-# Use the same scikit-learn version that trained the models (run `make train`
-# in the same environment, or pin the version printed by `pip show scikit-learn`).
-fastapi>=0.110
-uvicorn[standard]>=0.29
-pydantic>=2.5
-pandas>=2.0
-numpy>=1.26
-scikit-learn>=1.5
-xgboost>=2.0
-joblib>=1.3
-shap>=0.45
+# Versions are pinned to the ones that trained the models in models/.
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+pydantic==2.13.5
+pandas==3.0.5
+numpy==2.5.3
+scikit-learn==1.9.1
+xgboost==3.4.1
+joblib==1.6.0
+shap==0.52.0

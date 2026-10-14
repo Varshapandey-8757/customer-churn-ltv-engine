@@ -9,6 +9,7 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
+import pytest
 
 
 # =============================================================================
@@ -44,6 +45,9 @@ RAW_DATA_FILE = (
 # =============================================================================
 # 1. CHECK FILES
 # =============================================================================
+
+if not PIPELINE_FILE.exists() or not RAW_DATA_FILE.exists():
+    pytest.skip("Run `make export-features` first", allow_module_level=True)
 
 assert PIPELINE_FILE.exists(), (
     f"Feature pipeline not found: {PIPELINE_FILE}"

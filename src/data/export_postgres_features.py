@@ -1,6 +1,10 @@
 import os
+from pathlib import Path
 import pandas as pd
-from database import engine
+try:
+    from src.data.database import engine
+except ModuleNotFoundError:
+    from database import engine
 
 
 def export_postgres_features():
@@ -16,7 +20,7 @@ def export_postgres_features():
     print("Rows:", len(df))
     print("Columns:", len(df.columns))
 
-    output_folder = "data/processed"
+    output_folder = str(Path(__file__).resolve().parents[2] / "data" / "processed")
     os.makedirs(output_folder, exist_ok=True)
 
     output_file = os.path.join(

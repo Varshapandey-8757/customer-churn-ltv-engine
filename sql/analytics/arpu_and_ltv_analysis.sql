@@ -17,7 +17,7 @@ SELECT
     risk_profile,
     customer_strategic_segment,
     COUNT(customer_id) AS customer_count,
-    ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
+    ROUND(CAST(SUM(is_churned) AS NUMERIC) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
     
     -- ARPU Metrics
     ROUND(AVG(monthly_charges), 2) AS arpu,

@@ -15,7 +15,7 @@ SELECT
     'Tech Support' AS service_name,
     CASE WHEN has_tech_support = 1 THEN 'Enrolled' ELSE 'Not Enrolled' END AS enrollment_status,
     COUNT(customer_id) AS total_customers,
-    ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
+    ROUND(CAST(SUM(is_churned) AS NUMERIC) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
     ROUND(AVG(monthly_charges), 2) AS arpu,
     ROUND(AVG(total_charges), 2) AS avg_ltv
 FROM features
@@ -27,7 +27,7 @@ SELECT
     'Online Security' AS service_name,
     CASE WHEN has_online_security = 1 THEN 'Enrolled' ELSE 'Not Enrolled' END AS enrollment_status,
     COUNT(customer_id) AS total_customers,
-    ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
+    ROUND(CAST(SUM(is_churned) AS NUMERIC) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
     ROUND(AVG(monthly_charges), 2) AS arpu,
     ROUND(AVG(total_charges), 2) AS avg_ltv
 FROM features
@@ -39,7 +39,7 @@ SELECT
     'Fiber Optic w/o TechSupport Risk' AS service_name,
     CASE WHEN has_fiber_no_techsupport_risk = 1 THEN 'High Risk Exposure' ELSE 'Normal / Safe' END AS enrollment_status,
     COUNT(customer_id) AS total_customers,
-    ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
+    ROUND(CAST(SUM(is_churned) AS NUMERIC) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
     ROUND(AVG(monthly_charges), 2) AS arpu,
     ROUND(AVG(total_charges), 2) AS avg_ltv
 FROM features
@@ -51,7 +51,7 @@ SELECT
     'Streaming Bundle (TV + Movies)' AS service_name,
     CASE WHEN has_streaming_bundle = 1 THEN 'Both Subscribed' ELSE 'Partial / None' END AS enrollment_status,
     COUNT(customer_id) AS total_customers,
-    ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
+    ROUND(CAST(SUM(is_churned) AS NUMERIC) * 100.0 / COUNT(customer_id), 2) AS churn_rate_pct,
     ROUND(AVG(monthly_charges), 2) AS arpu,
     ROUND(AVG(total_charges), 2) AS avg_ltv
 FROM features
