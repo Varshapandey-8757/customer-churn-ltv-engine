@@ -68,7 +68,7 @@ with engine.connect() as connection:
         text(
             """
             SELECT COUNT(*)
-            FROM customer_churn
+            FROM analytics.customer_churn
             """
         )
     )
@@ -91,7 +91,7 @@ with engine.connect() as connection:
             """
             SELECT
                 COUNT(*) - COUNT(DISTINCT customer_id)
-            FROM customer_churn
+            FROM analytics.customer_churn
             """
         )
     )
@@ -116,7 +116,7 @@ with engine.connect() as connection:
             SELECT
                 churn,
                 COUNT(*)
-            FROM customer_churn
+            FROM analytics.customer_churn
             GROUP BY churn
             ORDER BY churn
             """
@@ -144,7 +144,7 @@ with engine.connect() as connection:
                     AVG(monthly_charges)::numeric,
                     2
                 )
-            FROM customer_churn
+            FROM analytics.customer_churn
             GROUP BY churn
             ORDER BY churn
             """

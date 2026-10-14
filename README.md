@@ -73,7 +73,7 @@ docker compose up --build       # API on http://localhost:8000
 
 - Month-to-month contracts churn at 42.7%; two-year contracts at 2.8%.
 - Fiber Optic customers without Tech Support churn at 49.4%.
-- Paperless billing with manual electronic check churns at 57.3%; auto-pay at 15.8%.
+- Paperless billing with electronic check churns at 49.8%; auto-pay customers at 16.0%.
 
 See `docs/` for the full KPI report, segmentation playbook and data dictionary.
 

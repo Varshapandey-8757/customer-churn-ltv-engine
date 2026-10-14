@@ -3,7 +3,10 @@ from pathlib import Path
 import pandas as pd
 from sqlalchemy import text
 
-from database import engine
+try:
+    from src.data.database import engine
+except ModuleNotFoundError:
+    from database import engine
 
 
 # Find the project root

@@ -16,7 +16,7 @@ SELECT
     COUNT(customer_id) AS total_customer_base,
     SUM(CASE WHEN is_churned = 0 THEN 1 ELSE 0 END) AS active_customers,
     SUM(is_churned) AS churned_customers,
-    ROUND(CAST(SUM(is_churned) AS FLOAT) * 100.0 / COUNT(customer_id), 2) AS overall_churn_rate_pct,
+    ROUND(CAST(SUM(is_churned) AS NUMERIC) * 100.0 / COUNT(customer_id), 2) AS overall_churn_rate_pct,
 
     -- Financial Totals (MRR & ARR are based on ACTIVE customers only)
     ROUND(SUM(CASE WHEN is_churned = 0 THEN monthly_charges ELSE 0 END), 2) AS active_mrr,

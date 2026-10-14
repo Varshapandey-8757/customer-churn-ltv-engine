@@ -51,9 +51,9 @@ SELECT
     ROUND(CAST(c.total_charges / (c.tenure_months + 1.0) AS DECIMAL(10, 2)), 2) AS avg_historical_monthly_charge,
     ROUND(CAST(c.monthly_charges - (c.total_charges / (c.tenure_months + 1.0)) AS DECIMAL(10, 2)), 2) AS charge_velocity,
     CASE 
-        WHEN c.monthly_charges < 35.0 THEN 'Low (<$35)'
-        WHEN c.monthly_charges < 70.0 THEN 'Medium ($35-$70)'
-        WHEN c.monthly_charges < 90.0 THEN 'High ($70-$90)'
+        WHEN c.monthly_charges <= 35.0 THEN 'Low (<$35)'
+        WHEN c.monthly_charges <= 70.0 THEN 'Medium ($35-$70)'
+        WHEN c.monthly_charges <= 90.0 THEN 'High ($70-$90)'
         ELSE 'Premium (>$90)'
     END AS monthly_charge_tier,
     
